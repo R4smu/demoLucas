@@ -7,6 +7,7 @@ import java.util.*;
 
 import javafx.animation.PauseTransition;
 import javafx.util.Duration;
+import com.mazmorron.modelo.TipoCelda;
 
 /**
  * Modelo del juego que gestiona mapa, personajes, turnos y lógica de combate.
@@ -31,6 +32,7 @@ public class ModeloJuego {
     private Celda[][] mapa;
     private Runnable accionFin;
     private int turnoActual = 1;
+    private static final int DANIO_TRAMPA = 10;
 
     /**
      * Registra un escucha para recibir notificaciones de cambio.
@@ -88,7 +90,7 @@ public class ModeloJuego {
     public Celda[][] getMapa() {
         return mapa;
     }
-
+    
     /**
      * Obtiene el número de turno actual.
      * @return Entero de turno.
@@ -135,7 +137,14 @@ public class ModeloJuego {
             for (int i = 0; i < lines.size(); i++) {
                 String row = lines.get(i);
                 for (int j = 0; j < maxC; j++) {
-                    mapa[i][j] = new Celda(j < row.length() && row.charAt(j) == '#');
+                    char c = (j < row.length() ? row.charAt(j) : ' ');
+                    TipoCelda tipo;
+                    switch (c) {
+                        case '#' -> tipo = TipoCelda.PARED;
+                        case 'T' -> tipo = TipoCelda.TRAMPA;
+                        default  -> tipo = TipoCelda.SUELO;
+                    }
+                    mapa[i][j] = new Celda(tipo);
                 }
             }
             notificarEscuchas();
@@ -196,6 +205,10 @@ public class ModeloJuego {
             mapa[x][y].setOcupante(null);
             mapa[nx][ny].setOcupante(protagonista);
             protagonista.setPosicion(nx, ny);
+
+            if (mapa[nx][ny].esTrampa()) {
+                protagonista.setSalud(protagonista.getSalud() - DANIO_TRAMPA);
+            }
         }
         return true;
     }

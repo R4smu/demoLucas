@@ -58,26 +58,29 @@ public class ControladorApp implements ModeloJuego.EscuchaModelo {
      * Dibuja el mapa de juego en la cuadrícula, colorea muros, suelo,
      * protagonista y enemigos, y actualiza la etiqueta del turno actual.
      */
+    
     public void dibujarMapa() {
-        panelCuadricula.getChildren().clear();
-        Celda[][] mapa = modelo.getMapa();
-        for (int i = 0; i < mapa.length; i++) {
-            for (int j = 0; j < mapa[i].length; j++) {
-                Rectangle celda = new Rectangle(40, 40);
-                celda.setStroke(Color.BLACK);
+    panelCuadricula.getChildren().clear();
+    Celda[][] mapa = modelo.getMapa();
+    for (int i = 0; i < mapa.length; i++) {
+        for (int j = 0; j < mapa[i].length; j++) {
+            Rectangle celda = new Rectangle(40, 40);
+            celda.setStroke(Color.BLACK);
 
-                if (mapa[i][j].esMuro()) {
-                    celda.setFill(Color.DARKGRAY);
-                } else {
-                    celda.setFill(Color.BEIGE);
-                }
+            if (mapa[i][j].esMuro()) {
+                celda.setFill(Color.DARKGRAY);
+            } else if (mapa[i][j].esTrampa()) {
+                   celda.setFill(Color.PINK);
+            } else {
+                celda.setFill(Color.BEIGE);
+            }
 
-                Personaje ocupante = mapa[i][j].getOcupante();
-                if (ocupante instanceof Prota) {
+            Personaje ocupante = mapa[i][j].getOcupante();
+            if (ocupante instanceof Prota) {
                     celda.setFill(Color.BLUE);
-                } else if (ocupante instanceof Enemigo) {
-                    celda.setFill(Color.RED);
-                }
+            } else if (ocupante instanceof Enemigo) {
+                celda.setFill(Color.RED);
+            }
 
                 panelCuadricula.add(celda, j, i);
             }

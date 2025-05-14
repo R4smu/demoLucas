@@ -76,7 +76,7 @@ public class AppJuego extends Application {
                 ctrl.getDefensa(),
                 ctrl.getVelocidad()
             );
-            prota.setPosicion(1, 1);
+            prota.setPosicion(5, 5);
             lanzarJuego(prota);
 
         } catch (Exception e) {
